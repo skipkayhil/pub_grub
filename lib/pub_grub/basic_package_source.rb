@@ -104,8 +104,8 @@ module PubGrub
       end
     end
 
-    def versions_for(package, range=VersionRange.any)
-      range.select_versions(@sorted_versions[package])
+    def partitioned_versions_for(package, range=VersionRange.any)
+      range.partition_versions(@sorted_versions[package])
     end
 
     def no_versions_incompatibility_for(_package, unsatisfied_term)

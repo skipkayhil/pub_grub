@@ -24,7 +24,7 @@ module PubGrub
     private
 
     def most_preferred_version_of(package, range)
-      versions = @source.versions_for(package, range)
+      versions = @source.partitioned_versions_for(package, range)[1]
 
       indexes = @version_indexes[package]
       versions.min_by { |version| indexes[version] }
@@ -32,10 +32,9 @@ module PubGrub
 
     def next_term_to_try_from(unsatisfied)
       unsatisfied.min_by do |package, range|
-        matching_versions = @source.versions_for(package, range)
-        higher_versions = @source.versions_for(package, range.upper_invert)
+        _, matching, higher = @source.partitioned_versions_for(package, range)
 
-        [matching_versions.count <= 1 ? 0 : 1, higher_versions.count]
+        [matching.count <= 1 ? 0 : 1, higher.count]
       end
     end
   end
